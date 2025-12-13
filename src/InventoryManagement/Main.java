@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		User user = new User("deneme2", "5555", "user");
-		DBUser.save(user);
+		DBUser.update(user,"deneme3","5554");
 
 	}
 
