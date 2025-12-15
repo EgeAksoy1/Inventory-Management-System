@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import InventoryManagement.User;
 
-public class DBUser {
+public class DBUser{
 	User user;
 	private static Integer getId(User user) {
 	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
@@ -145,6 +145,54 @@ public class DBUser {
         } catch (SQLException e) {
             System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
         }
+	}
+	public static void delete(User user) {
+	    
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+
+	    String deleteSql = "DELETE FROM users WHERE id = " + getId(user);
+
+	    Connection connection = null;
+	    Statement statement = null;
+
+	    try {
+	  
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	       
+	    
+	        connection = DriverManager.getConnection(url, dbuser, password);
+
+	        System.out.println("MySQL bağlantısı başarılı.");
+	        
+	     
+	        statement = connection.createStatement();
+	        
+	    
+	        int affectedRows = statement.executeUpdate(deleteSql);
+	        
+
+	        if (affectedRows > 0) {
+	            System.out.println("✅ Kullanıcı başarıyla silindi.");
+	        } else {
+	            System.out.println("❌ Kullanıcı silinirken bir sorun oluştu veya kullanıcı bulunamadı.");
+	        }
+	        
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
+	    } finally {
+	  
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            System.out.println("Kaynakları kapatırken hata oluştu: " + e.getMessage());
+	        }
+	    }
 	}
 
 }
