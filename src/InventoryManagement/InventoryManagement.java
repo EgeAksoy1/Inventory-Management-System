@@ -40,14 +40,72 @@ public class InventoryManagement {
 		}
 	}
 	public static void adminpage() {
-		
+		Scanner sc = new Scanner(System.in);
 		System.out.println("======ADMİN PAGE======");
 		System.out.println("1. Product Management");
 		System.out.println("2. Supplier Management");
 		System.out.println("3. User Management");
 		System.out.println("4. Logout");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			
+			break;
+		}
+		case 2: {
+			
+			break;
+		}
+		case 3: {
+	
+			break;
+		}
+		case 4: {
+			login();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	public static void userpage() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("======USER PAGE======");
+		System.out.println("1. Add new product");
+		System.out.println("2. Reduce Product");
+		System.out.println("3. Search Product");
+		System.out.println("4. User Management");
+		System.out.println("5. Account Management");
+		System.out.println("6. Logout");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			
+			break;
+		}
+		case 2: {
+			
+			break;
+		}
+		case 3: {
+	
+			break;
+		}
+		case 4: {
+			
+			break;
+		}
+		case 5: {
+			
+			break;
+		}
+		case 6: {
+			login();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 		
 	}
 
