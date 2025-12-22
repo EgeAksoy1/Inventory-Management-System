@@ -194,5 +194,54 @@ public class DBUser{
 	        }
 	    }
 	}
+	public static String selectUser(String username,String pd) {
+		String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+	    
+	 
+	    String selectSql = "SELECT role FROM users WHERE name = ? AND password = ?";
+	    
+	    String userrole = null; 
+
+	    try {
+	   
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        
+	        try (
+	        
+	            Connection connection = DriverManager.getConnection(url, dbuser, password);
+	
+	            PreparedStatement preparedStatement = connection.prepareStatement(selectSql)
+	        ) {
+	            
+	  
+	            preparedStatement.setString(1, username);     
+	            preparedStatement.setString(2, pd); 
+
+	     
+	            ResultSet resultSet = preparedStatement.executeQuery();
+	            
+	         
+	            if (resultSet.next()) {
+	 
+	                userrole = resultSet.getNString("role"); 
+	            }
+	            
+	        }
+
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
+	  
+	    } catch (SQLException e) {
+	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
+	
+	    }
+	    
+
+	    return userrole;
+	    
+		
+	}
 
 }

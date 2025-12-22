@@ -15,16 +15,12 @@ public class DBProduct {
         String dbuser = "root";
         String password = "sql1234";
 
-        String temp=p.getMaxstoragedays();
-        if (p.getMaxstoragedays()==" ") {
-        	temp=null;
-        }
         String insertSql = "INSERT INTO products (name, price, supplierId, minimumstocklevel, maxstoragedays) VALUES ('"
                 + p.getName() + "', '"
                 + p.getPrice() + "', '"
                 + p.getSupplierId() + "', '"
                 + p.getMinimumstocklevel() + "', '"
-                + temp + "')";
+                + p.getMaxstoragedays() + "')";
 
         try {
             
