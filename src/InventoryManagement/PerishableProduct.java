@@ -3,8 +3,8 @@ package InventoryManagement;
 public class PerishableProduct extends Product {
 
 	private String maxstoragedays;
-	public PerishableProduct (String name, double price, int supplierId, int minimumstocklevel,String maxstoragedays) {
-		super(name,price,supplierId,minimumstocklevel);
+	public PerishableProduct (String name, double price, int stock,  int supplierId, int minimumstocklevel,String maxstoragedays) {
+		super(name,price,stock,supplierId,minimumstocklevel);
 		setMaxstoragedays(maxstoragedays);
 	}
 	public String getMaxstoragedays() {

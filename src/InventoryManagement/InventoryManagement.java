@@ -2,6 +2,7 @@ package InventoryManagement;
 
 import java.util.Scanner;
 
+import DataBaseCon.DBProduct;
 import DataBaseCon.DBUser;
 
 public class InventoryManagement {
@@ -80,7 +81,7 @@ public class InventoryManagement {
 		int choose = sc.nextInt();
 		switch (choose) {
 		case 1: {
-			
+			addProduct();
 			break;
 		}
 		case 2: {
@@ -108,5 +109,27 @@ public class InventoryManagement {
 		}
 		
 	}
+	public static void addProduct() {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Product's name: ");
+		String name = sc.nextLine();
+		System.out.print("Product's price: ");
+		Double price = sc.nextDouble();
+		System.out.print("Stock level: ");
+		int stocklevel = sc.nextInt();
+		System.out.print("Supplier İD: ");
+		int supplierid = sc.nextInt();
+		System.out.print("Minimum Stock Level: ");
+		int minimumstocklevel = sc.nextInt();
+		System.out.print("Max Storage Days (It can be space): ");
+		String maxstoragedays = sc.next();
+		PerishableProduct added = new PerishableProduct(name, price, stocklevel, supplierid, minimumstocklevel, maxstoragedays);
+		DBProduct.save(added);
+	}
+	public static void reduceProduct() {
+		
+		DBProduct.getProductsList();
+	}
+	
 
 }

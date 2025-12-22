@@ -6,10 +6,12 @@ public class Product {
 	private double price;
 	private int supplierId;
 	private int minimumstocklevel;
+	private int stock;
 	
-	public Product(String name, double price, int supplierId, int minimumstocklevel) {
+	public Product(String name, double price,int stock, int supplierId, int minimumstocklevel) {
 		setName(name);
 		setPrice(price);
+		setStock(stock);
 		setSupplierId(supplierId);
 		setMinimumstocklevel(minimumstocklevel);
 	}
@@ -44,5 +46,13 @@ public class Product {
 
 	public void setMinimumstocklevel(int minimumstocklevel) {
 		this.minimumstocklevel = minimumstocklevel;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 }
