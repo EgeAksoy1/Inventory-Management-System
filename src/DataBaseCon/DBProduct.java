@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class DBProduct {
 	                String name = resultSet.getString("name");
 	                int currentStock = resultSet.getInt("stocklevel");
 
-	                String formatliYazi = id + " - " + name + " (Mevcut Stok: " + currentStock + ")";
+	                String formatliYazi = id + " - " + name + " (Current Stock: " + currentStock + ")";
 	                
 	                productList.add(formatliYazi);
 	            }
@@ -92,5 +93,91 @@ public class DBProduct {
 	    }
 
 	    return productList;
+	}
+	public static void deleteProduct(int id) {
+		String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+
+	    String deleteSql = "DELETE FROM products WHERE id = " + id;
+
+	    Connection connection = null;
+	    Statement statement = null;
+
+	    try {
+	  
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	       
+	    
+	        connection = DriverManager.getConnection(url, dbuser, password);
+
+	        System.out.println("MySQL bağlantısı başarılı.");
+	        
+	     
+	        statement = connection.createStatement();
+	        
+	    
+	        int affectedRows = statement.executeUpdate(deleteSql);
+	        
+
+	        if (affectedRows > 0) {
+	            System.out.println("Product reduced succesfully");
+	        } else {
+	            System.out.println("Product reduced unsuccesfully");
+	        }
+	        
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
+	    } finally {
+	  
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            System.out.println("Kaynakları kapatırken hata oluştu: " + e.getMessage());
+	        }
+	    }
+		
+	}
+	
+
+	public static void reduceProduct(int id, int amount) {
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+	    
+	    String updateSql = "UPDATE products SET stocklevel = stocklevel - ? WHERE id = ?";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        
+	       
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+
+	            System.out.println("MySQL bağlantısı başarılı.");
+
+	          
+	            preparedStatement.setInt(1, amount); 
+	            preparedStatement.setInt(2, id);    
+
+	            int affectedRows = preparedStatement.executeUpdate();
+
+	            if (affectedRows > 0) {
+	                System.out.println("Product stock reduced successfully.");
+	            } else {
+	                System.out.println("Update failed. Product ID may not exist.");
+	            }
+	        }
+
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
+	    }
 	}
 }

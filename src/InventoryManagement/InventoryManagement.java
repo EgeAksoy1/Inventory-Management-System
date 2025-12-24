@@ -20,6 +20,8 @@ public class InventoryManagement {
 			String password = sc.next();
 			User user = new User(username, password, "user");
 			DBUser.save(user);
+			System.out.println("Now you have a account try login");
+			login();
 			break;
 			
 		}
@@ -85,7 +87,7 @@ public class InventoryManagement {
 			break;
 		}
 		case 2: {
-			
+			reduceProduct();
 			break;
 		}
 		case 3: {
@@ -128,7 +130,15 @@ public class InventoryManagement {
 	}
 	public static void reduceProduct() {
 		
-		DBProduct.getProductsList();
+		for (String s : DBProduct.getProductsList()) {
+			System.out.println(s);
+		}
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Enter an ID which product you want reduce: ");
+		int id = sc.nextInt();
+		System.out.print("Enter an amount that you want reduce: ");
+		int amount = sc.nextInt();
+		DBProduct.reduceProduct(id,amount);
 	}
 	
 
