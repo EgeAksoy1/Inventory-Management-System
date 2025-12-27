@@ -6,8 +6,9 @@ import DataBaseCon.DBProduct;
 import DataBaseCon.DBUser;
 
 public class InventoryManagement {
+	private static Scanner sc = new Scanner(System.in);
 	public static void login() {
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("1. Sign Up");
 		System.out.println("2. Login");
 		System.out.print("Type a number: ");
@@ -43,12 +44,13 @@ public class InventoryManagement {
 		}
 	}
 	public static void adminpage() {
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("======ADMİN PAGE======");
 		System.out.println("1. Product Management");
 		System.out.println("2. Supplier Management");
 		System.out.println("3. User Management");
 		System.out.println("4. Logout");
+		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
 		switch (choose) {
 		case 1: {
@@ -72,7 +74,7 @@ public class InventoryManagement {
 		}
 	}
 	public static void userpage() {
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("======USER PAGE======");
 		System.out.println("1. Add new product");
 		System.out.println("2. Reduce Product");
@@ -80,6 +82,7 @@ public class InventoryManagement {
 		System.out.println("4. User Management");
 		System.out.println("5. Account Management");
 		System.out.println("6. Logout");
+		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
 		switch (choose) {
 		case 1: {
@@ -91,7 +94,7 @@ public class InventoryManagement {
 			break;
 		}
 		case 3: {
-	
+			searchProduct();
 			break;
 		}
 		case 4: {
@@ -112,7 +115,7 @@ public class InventoryManagement {
 		
 	}
 	public static void addProduct() {
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.print("Product's name: ");
 		String name = sc.nextLine();
 		System.out.print("Product's price: ");
@@ -133,12 +136,24 @@ public class InventoryManagement {
 		for (String s : DBProduct.getProductsList()) {
 			System.out.println(s);
 		}
-		Scanner sc = new Scanner(System.in);
+		
 		System.out.print("Enter an ID which product you want reduce: ");
 		int id = sc.nextInt();
 		System.out.print("Enter an amount that you want reduce: ");
 		int amount = sc.nextInt();
 		DBProduct.reduceProduct(id,amount);
+		System.out.println("New Product List");
+		for (String s : DBProduct.getProductsList()) {
+			System.out.println(s);
+		}
+	}
+	public static void searchProduct() {
+		for (String s : DBProduct.searchProductsList()) {
+			System.out.println(s);
+		}
+		System.out.println("Enter an ID which product you want search: ");
+		int searchID = sc.nextInt();
+		DBProduct.selectProductsID(searchID);
 	}
 	
 

@@ -94,6 +94,86 @@ public class DBProduct {
 
 	    return productList;
 	}
+	public static List<String> searchProductsList() {
+		
+	    List<String> productList = new ArrayList<>();
+
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+
+	    String selectSql = "SELECT id, name FROM products";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             Statement statement = connection.createStatement();
+	             ResultSet resultSet = statement.executeQuery(selectSql)) {
+	            while (resultSet.next()) {
+	                int id = resultSet.getInt("id");
+	                String name = resultSet.getString("name");
+
+	                String formatliYazi = id + " - " + name ;
+	                
+	                productList.add(formatliYazi);
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("Driver hatası: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.out.println("SQL hatası: " + e.getMessage());
+	    }
+
+	    return productList;
+	}
+	public static void selectProductsID(int searchId) {
+	    
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+	    String selectSql = "SELECT id, name, price, supplierId, stocklevel, minimumstocklevel, maxstoragedays " +
+	                       "FROM products WHERE id = ?";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver"); 
+
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+	             
+	            preparedStatement.setInt(1, searchId);
+
+	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                if (resultSet.next()) {
+	                    int id = resultSet.getInt("id");
+	                    String name = resultSet.getString("name");
+	                    double price = resultSet.getDouble("price");
+	                    String supplier = resultSet.getString("supplierId");
+	                    int stockLevel = resultSet.getInt("stocklevel");
+	                    int minStockLevel = resultSet.getInt("minimumstocklevel");
+	                    int maxStorageDays = resultSet.getInt("maxstoragedays");
+
+	                    System.out.println("Product Details");
+	                    System.out.println("ID                  : " + id);
+	                    System.out.println("Name                : " + name);
+	                    System.out.println("Price               : " + price);
+	                    System.out.println("Supplier ID         : " + supplier);
+	                    System.out.println("Stock Level         : " + stockLevel);
+	                    System.out.println("Minimum Stock Level : " + minStockLevel);
+	                    System.out.println("Max Storage Days    : " + maxStorageDays);
+	                } else {
+	                    System.out.println("Product with ID " + searchId + " not found.");
+	                }
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.err.println("Driver Error: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+	}
 	public static void deleteProduct(int id) {
 		String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
 	    String dbuser = "root";
