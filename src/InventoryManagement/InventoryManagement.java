@@ -7,6 +7,7 @@ import DataBaseCon.DBUser;
 
 public class InventoryManagement {
 	private static Scanner sc = new Scanner(System.in);
+	private static User user;
 	public static void login() {
 		
 		System.out.println("1. Sign Up");
@@ -19,7 +20,7 @@ public class InventoryManagement {
 			String username = sc.next();
 			System.out.print("Password: ");
 			String password = sc.next();
-			User user = new User(username, password, "user");
+			user = new User(username, password, "user");
 			DBUser.save(user);
 			System.out.println("Now you have a account try login");
 			login();
@@ -29,18 +30,23 @@ public class InventoryManagement {
 		case 2: {
 			System.out.print("Username: ");
 			String username = sc.next();
-			System.out.println("Password: ");
+			System.out.print("Password: ");
 			String password = sc.next();
-			String selected = DBUser.selectUser(username, password);
-			if (selected.equals("admin")) {
-				adminpage();;
-			} else if (selected.equals("user")) {
-				userpage();;
-			}
+			pageselecter(username, password);
 			break;
 		}
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + a);
+		}
+	}
+	public static void pageselecter(String username,String password) {
+		String selected = DBUser.selectUser(username, password);
+		if (selected.equals("admin")) {
+			user = new User(username, password, "admin");
+			adminpage();
+		} else if (selected.equals("user")) {
+			user = new User(username, password, "user");
+			userpage();
 		}
 	}
 	public static void adminpage() {
@@ -79,9 +85,8 @@ public class InventoryManagement {
 		System.out.println("1. Add new product");
 		System.out.println("2. Reduce Product");
 		System.out.println("3. Search Product");
-		System.out.println("4. User Management");
-		System.out.println("5. Account Management");
-		System.out.println("6. Logout");
+		System.out.println("4. Account Management");
+		System.out.println("5. Logout");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
 		switch (choose) {
@@ -98,14 +103,10 @@ public class InventoryManagement {
 			break;
 		}
 		case 4: {
-			
+			accountmanagement();
 			break;
 		}
 		case 5: {
-			
-			break;
-		}
-		case 6: {
 			login();
 			break;
 		}
@@ -151,9 +152,40 @@ public class InventoryManagement {
 		for (String s : DBProduct.searchProductsList()) {
 			System.out.println(s);
 		}
-		System.out.println("Enter an ID which product you want search: ");
+		System.out.print("Enter an ID which product you want search: ");
 		int searchID = sc.nextInt();
 		DBProduct.selectProductsID(searchID);
+	}
+	public static void accountmanagement() {
+		System.out.println("Account Management Page");
+		System.out.println("Username: "+user.getName()+" Password: "+user.getPassword());
+		System.out.println("1. Change the password");
+		System.out.println("2. Delete the account");
+		System.out.println("3. Back");
+		System.out.print("Enter your choose: ");
+		int choose =sc.nextInt();
+		sc.nextLine();
+		switch (choose) {
+		case 1: {
+			System.out.print("Enter your new password: ");
+			String newpass = sc.nextLine();
+			DBUser.update(user, user.getName(), newpass);
+			System.out.println("Username: "+user.getName()+" Password: "+user.getPassword());
+			break;
+		}
+		case 2: {
+			System.out.println("Your account has been deleted");
+			DBUser.delete(user);
+			login();
+			break;
+		}
+		case 3: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	
 
