@@ -153,16 +153,16 @@ public class DBProduct {
 	                    String supplier = resultSet.getString("supplierId");
 	                    int stockLevel = resultSet.getInt("stocklevel");
 	                    int minStockLevel = resultSet.getInt("minimumstocklevel");
-	                    int maxStorageDays = resultSet.getInt("maxstoragedays");
+	                    String maxStorageDays = resultSet.getString("maxstoragedays");
 
 	                    System.out.println("Product Details");
-	                    System.out.println("ID                  : " + id);
-	                    System.out.println("Name                : " + name);
-	                    System.out.println("Price               : " + price);
-	                    System.out.println("Supplier ID         : " + supplier);
-	                    System.out.println("Stock Level         : " + stockLevel);
-	                    System.out.println("Minimum Stock Level : " + minStockLevel);
-	                    System.out.println("Max Storage Days    : " + maxStorageDays);
+	                    System.out.println("   ID                  : " + id);
+	                    System.out.println("1. Name                : " + name);
+	                    System.out.println("2. Price               : " + price);
+	                    System.out.println("3. Supplier ID         : " + supplier);
+	                    System.out.println("4. Stock Level         : " + stockLevel);
+	                    System.out.println("5. Minimum Stock Level : " + minStockLevel);
+	                    System.out.println("6. Max Storage Days    : " + maxStorageDays);
 	                } else {
 	                    System.out.println("Product with ID " + searchId + " not found.");
 	                }

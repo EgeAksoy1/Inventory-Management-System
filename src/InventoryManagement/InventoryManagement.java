@@ -60,7 +60,7 @@ public class InventoryManagement {
 		int choose = sc.nextInt();
 		switch (choose) {
 		case 1: {
-			
+			pageProductManagement();
 			break;
 		}
 		case 2: {
@@ -73,6 +73,97 @@ public class InventoryManagement {
 		}
 		case 4: {
 			login();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void pageProductManagement() {
+		System.out.println("Product Management Page");
+		System.out.println("1. Add new Product");
+		System.out.println("2. Reduce Product");
+		System.out.println("3. Update Product");
+		System.out.println("4. Delete Product");
+		System.out.println("5. Back");
+		System.out.print("Type a number: ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			addProduct();
+			break;
+		}
+		case 2: {
+			reduceProduct();
+			break;
+		}
+		case 3: {
+			updateProduct();
+			break;
+		}
+		case 4: {
+	
+			break;
+		}
+		case 5: {
+			
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+		
+	}
+	public static void updateProduct() {
+		for (String s : DBProduct.searchProductsList()) {
+			System.out.println(s);
+		}
+		System.out.println("Enter an ID which product you want update: ");
+		int searchID = sc.nextInt();
+		DBProduct.selectProductsID(searchID);
+		System.out.print("Enter the number of the feature you want to update: ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			System.out.print("Enter new name: ");
+			String newname = sc.nextLine();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
+			break;
+		}
+		case 2: {
+			System.out.print("Enter new price: ");
+			Double newprice = sc.nextDouble();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
+			break;
+		}
+		case 3: {
+			System.out.print("Enter new supplier ID: ");
+			String newsupplierid = sc.nextLine();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
+			break;
+		}
+		case 4: {
+			System.out.print("Enter new stock level: ");
+			int newstocklevel = sc.nextInt();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
+			break;
+		}
+		case 5: {
+			System.out.print("Enter new minimum stock level: ");
+			int newminimumstocklevel = sc.nextInt();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
+			break;
+		}
+		case 6: {
+			System.out.print("Enter new max storage days: ");
+			String newmaxstoragedays = sc.nextLine();
+			System.out.println("New Details of Updated Product");
+			DBProduct.selectProductsID(searchID);
 			break;
 		}
 		default:
@@ -123,7 +214,7 @@ public class InventoryManagement {
 		Double price = sc.nextDouble();
 		System.out.print("Stock level: ");
 		int stocklevel = sc.nextInt();
-		System.out.print("Supplier İD: ");
+		System.out.print("Supplier ID: ");
 		int supplierid = sc.nextInt();
 		System.out.print("Minimum Stock Level: ");
 		int minimumstocklevel = sc.nextInt();
@@ -131,6 +222,21 @@ public class InventoryManagement {
 		String maxstoragedays = sc.next();
 		PerishableProduct added = new PerishableProduct(name, price, stocklevel, supplierid, minimumstocklevel, maxstoragedays);
 		DBProduct.save(added);
+		System.out.println("1. Back     2. Add another product");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			addProduct();;
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	public static void reduceProduct() {
 		
@@ -147,6 +253,21 @@ public class InventoryManagement {
 		for (String s : DBProduct.getProductsList()) {
 			System.out.println(s);
 		}
+		System.out.println("1. Back     2. Reduce another product");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			reduceProduct();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	public static void searchProduct() {
 		for (String s : DBProduct.searchProductsList()) {
@@ -155,6 +276,21 @@ public class InventoryManagement {
 		System.out.print("Enter an ID which product you want search: ");
 		int searchID = sc.nextInt();
 		DBProduct.selectProductsID(searchID);
+		System.out.println("1. Back     2. Search another product");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			searchProduct();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	public static void accountmanagement() {
 		System.out.println("Account Management Page");
@@ -170,7 +306,9 @@ public class InventoryManagement {
 			System.out.print("Enter your new password: ");
 			String newpass = sc.nextLine();
 			DBUser.update(user, user.getName(), newpass);
+			user = new User(user.getName(),newpass,user.getRole());
 			System.out.println("Username: "+user.getName()+" Password: "+user.getPassword());
+			accountmanagement();
 			break;
 		}
 		case 2: {
