@@ -103,7 +103,7 @@ public class InventoryManagement {
 			break;
 		}
 		case 4: {
-	
+			deleteProduct();
 			break;
 		}
 		case 5: {
@@ -114,6 +114,45 @@ public class InventoryManagement {
 			throw new IllegalArgumentException("Unexpected value: " + choose);
 		}
 		
+	}
+	public static void deleteProduct() {
+		for (String s : DBProduct.searchProductsList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter an ID which product you want delete: ");
+		int searchID = sc.nextInt();
+		DBProduct.deleteProduct(searchID);
+		System.out.println("Final Product List");
+		for (String s : DBProduct.searchProductsList()) {
+			System.out.println(s);
+		}
+		System.out.print("1. Back     2. Quit");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			deleteProduct();
+			break;
+		}
+		case 2: {
+			adminpage();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void pageBack() {
+		System.out.println("1. Back     2. Quit");
+		System.out.print("Type a number (1-2): ");
+		int choose2 = sc.nextInt();
+		if (choose2 == 1) {
+			updateProduct();
+		}else if(choose2 == 2) {
+			adminpage();
+		}else {
+			System.out.println("Invalid input");
+			pageBack();
+		}
 	}
 	public static void updateProduct() {
 		for (String s : DBProduct.searchProductsList()) {
@@ -133,6 +172,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, newname, product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		case 2: {
@@ -141,6 +181,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, product.getName(), newprice, product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		case 3: {
@@ -149,6 +190,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), newsupplierid, product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		case 4: {
@@ -157,6 +199,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), newstocklevel, product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		case 5: {
@@ -165,6 +208,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), newminimumstocklevel, product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		case 6: {
@@ -173,6 +217,7 @@ public class InventoryManagement {
 			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), newmaxstoragedays);
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
+			pageBack();
 			break;
 		}
 		default:

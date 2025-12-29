@@ -174,6 +174,37 @@ public class DBProduct {
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
 	}
+	public static void deleteProduct(int id) {
+	    
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+	    String deleteSql = "DELETE FROM products WHERE id = ?";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
+
+	            preparedStatement.setInt(1, id);
+
+	            int rowsAffected = preparedStatement.executeUpdate();
+
+	            if (rowsAffected > 0) {
+	                System.out.println("Product with ID " + id + " was deleted successfully.");
+	            } else {
+	                System.out.println("Deletion failed. Product with ID " + id + " not found.");
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.err.println("Driver Error: " + e.getMessage());
+	    } catch (SQLException e) {
+
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+	}
 	public static PerishableProduct getPerishableProductById(int searchId) {
 	    
 	    PerishableProduct product = null; 
@@ -249,55 +280,6 @@ public class DBProduct {
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
 	}
-	public static void deleteProduct(int id) {
-		String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
-
-
-	    String deleteSql = "DELETE FROM products WHERE id = " + id;
-
-	    Connection connection = null;
-	    Statement statement = null;
-
-	    try {
-	  
-	        Class.forName("com.mysql.cj.jdbc.Driver");
-	       
-	    
-	        connection = DriverManager.getConnection(url, dbuser, password);
-
-	        System.out.println("MySQL bağlantısı başarılı.");
-	        
-	     
-	        statement = connection.createStatement();
-	        
-	    
-	        int affectedRows = statement.executeUpdate(deleteSql);
-	        
-
-	        if (affectedRows > 0) {
-	            System.out.println("Product reduced succesfully");
-	        } else {
-	            System.out.println("Product reduced unsuccesfully");
-	        }
-	        
-	    } catch (ClassNotFoundException e) {
-	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
-	    } catch (SQLException e) {
-	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
-	    } finally {
-	  
-	        try {
-	            if (statement != null) statement.close();
-	            if (connection != null) connection.close();
-	        } catch (SQLException e) {
-	            System.out.println("Kaynakları kapatırken hata oluştu: " + e.getMessage());
-	        }
-	    }
-		
-	}
-	
 
 	public static void reduceProduct(int id, int amount) {
 	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
