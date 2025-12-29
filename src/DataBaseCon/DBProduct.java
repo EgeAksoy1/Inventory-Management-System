@@ -174,6 +174,81 @@ public class DBProduct {
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
 	}
+	public static PerishableProduct getPerishableProductById(int searchId) {
+	    
+	    PerishableProduct product = null; 
+
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+	    String selectSql = "SELECT name, price, supplierId, stocklevel, minimumstocklevel, maxstoragedays " +
+	                       "FROM products WHERE id = ?";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+
+	            preparedStatement.setInt(1, searchId);
+
+	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                if (resultSet.next()) {
+	                    String name = resultSet.getString("name");
+	                    double price = resultSet.getDouble("price");
+	                    int supplierId = resultSet.getInt("supplierId");
+	                    int stockLevel = resultSet.getInt("stocklevel");
+	                    int minStockLevel = resultSet.getInt("minimumstocklevel");
+	                    String maxStorageDays = resultSet.getString("maxstoragedays"); 
+
+	                    product = new PerishableProduct(name, price, supplierId, stockLevel, minStockLevel, maxStorageDays);
+	                }
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.err.println("Driver Error: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+
+	    return product; 
+	}
+	public static void updateProduct(int id, String name, double price, int supplierId, int stockLevel, int minStockLevel, String maxStorageDays) {
+
+	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
+	    String dbuser = "root";
+	    String password = "sql1234";
+
+	    String updateSql = "UPDATE products SET name=?, price=?, supplierId=?, stocklevel=?, minimumstocklevel=?, maxstoragedays=? WHERE id=?";
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+
+	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	             PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+
+	            preparedStatement.setString(1, name);
+	            preparedStatement.setDouble(2, price);
+	            preparedStatement.setInt(3, supplierId);
+	            preparedStatement.setInt(4, stockLevel);
+	            preparedStatement.setInt(5, minStockLevel);
+	            preparedStatement.setString(6, maxStorageDays); 
+	            preparedStatement.setInt(7, id);
+	            int rowsAffected = preparedStatement.executeUpdate();
+
+	            if (rowsAffected > 0) {
+	                System.out.println("Product with ID " + id + " was updated successfully.");
+	            } else {
+	                System.out.println("Update failed. Product with ID " + id + " not found.");
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.err.println("Driver Error: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+	}
 	public static void deleteProduct(int id) {
 		String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
 	    String dbuser = "root";

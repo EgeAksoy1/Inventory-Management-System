@@ -8,6 +8,7 @@ import DataBaseCon.DBUser;
 public class InventoryManagement {
 	private static Scanner sc = new Scanner(System.in);
 	private static User user;
+	private static PerishableProduct product;
 	public static void login() {
 		
 		System.out.println("1. Sign Up");
@@ -106,7 +107,7 @@ public class InventoryManagement {
 			break;
 		}
 		case 5: {
-			
+			pageselecter(user.getName(), user.getPassword());
 			break;
 		}
 		default:
@@ -121,12 +122,15 @@ public class InventoryManagement {
 		System.out.println("Enter an ID which product you want update: ");
 		int searchID = sc.nextInt();
 		DBProduct.selectProductsID(searchID);
+	    product = DBProduct.getPerishableProductById(searchID);
 		System.out.print("Enter the number of the feature you want to update: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			System.out.print("Enter new name: ");
 			String newname = sc.nextLine();
+			DBProduct.updateProduct(searchID, newname, product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
@@ -134,13 +138,15 @@ public class InventoryManagement {
 		case 2: {
 			System.out.print("Enter new price: ");
 			Double newprice = sc.nextDouble();
+			DBProduct.updateProduct(searchID, product.getName(), newprice, product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
 		}
 		case 3: {
 			System.out.print("Enter new supplier ID: ");
-			String newsupplierid = sc.nextLine();
+			int newsupplierid = sc.nextInt();
+			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), newsupplierid, product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
@@ -148,6 +154,7 @@ public class InventoryManagement {
 		case 4: {
 			System.out.print("Enter new stock level: ");
 			int newstocklevel = sc.nextInt();
+			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), newstocklevel, product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
@@ -155,6 +162,7 @@ public class InventoryManagement {
 		case 5: {
 			System.out.print("Enter new minimum stock level: ");
 			int newminimumstocklevel = sc.nextInt();
+			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), newminimumstocklevel, product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
@@ -162,6 +170,7 @@ public class InventoryManagement {
 		case 6: {
 			System.out.print("Enter new max storage days: ");
 			String newmaxstoragedays = sc.nextLine();
+			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), newmaxstoragedays);
 			System.out.println("New Details of Updated Product");
 			DBProduct.selectProductsID(searchID);
 			break;
