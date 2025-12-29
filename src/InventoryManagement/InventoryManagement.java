@@ -96,19 +96,102 @@ public class InventoryManagement {
 			break;
 		}
 		case 2: {
-			
+			admindeleteUser();
 			break;
 		}
 		case 3: {
-			
+			adminupdateUser();
 			break;
 		}
 		case 4: {
-			
+			adminsearchUser();
 			break;
 		}
 		case 5: {
 			adminpage();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void adminsearchUser() {
+		
+	}
+	public static void adminupdateUser() {
+		for (String s : DBUser.getUserList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter the ID of the user to update:");
+		int userid = sc.nextInt();
+		DBUser.getUserDetailsById(userid);
+		newuser = DBUser.getUserById(userid);
+		System.out.print("Enter the number of the detail you want to update: ");
+		int choose = sc.nextInt();
+		sc.nextLine();
+		switch (choose) {
+		case 1: {
+			System.out.print("New username: ");
+			String newusername = sc.nextLine();
+			DBUser.adminUpdate(userid, newusername, newuser.getPassword(), newuser.getRole());
+			System.out.println("New Details of User");
+			DBUser.getUserDetailsById(userid);
+			pagebackUser();
+			break;
+		}
+		case 2: {
+			System.out.print("New password: ");
+			String newpassword = sc.nextLine();
+			DBUser.adminUpdate(userid, newuser.getName(), newpassword, newuser.getRole());
+			System.out.println("New Details of User");
+			DBUser.getUserDetailsById(userid);
+			pagebackUser();
+			break;
+		}
+		case 3: {
+			System.out.print("New role: ");
+			String newrole = sc.nextLine();
+			DBUser.adminUpdate(userid, newuser.getName(), newuser.getPassword(), newrole);
+			System.out.println("New Details of User");
+			DBUser.getUserDetailsById(userid);
+			pagebackUser();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void pagebackUser() {
+		System.out.println("1. Back      2.Quit");
+		System.out.print("Type a number (1-2): ");
+		int choose2 = sc.nextInt();
+		sc.nextLine();
+		if (choose2 == 1) {
+			adminupdateUser();
+		}else if(choose2 == 2) {
+			adminpage();
+		}else {
+			System.out.println("Invalid input");
+			pageBack();
+		}
+	}
+	public static void admindeleteUser() {
+		for (String s : DBUser.getUserList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter the ID of the user to delete:");
+		int userid = sc.nextInt();
+		DBUser.adminDelete(userid);
+		System.out.println("1. Back     2. Quit");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			pageUserManagement();
 			break;
 		}
 		default:
@@ -124,7 +207,21 @@ public class InventoryManagement {
 		String role = sc.nextLine();
 		newuser = new User(username, password, role);
 		DBUser.save(newuser);
-		System.out.println("Now you have a account try login");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			pageUserManagement();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+		
 	}
 	public static void pageProductManagement() {
 		System.out.println("Product Management Page");
@@ -208,7 +305,7 @@ public class InventoryManagement {
 		int searchID = sc.nextInt();
 		DBProduct.selectProductsID(searchID);
 	    product = DBProduct.getPerishableProductById(searchID);
-		System.out.print("Enter the number of the feature you want to update: ");
+		System.out.print("Enter the number of the detail you want to update: ");
 		int choose = sc.nextInt();
 		sc.nextLine();
 		switch (choose) {
