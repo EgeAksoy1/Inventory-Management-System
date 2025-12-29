@@ -8,6 +8,7 @@ import DataBaseCon.DBUser;
 public class InventoryManagement {
 	private static Scanner sc = new Scanner(System.in);
 	private static User user;
+	private static User newuser;
 	private static PerishableProduct product;
 	public static void login() {
 		
@@ -69,7 +70,7 @@ public class InventoryManagement {
 			break;
 		}
 		case 3: {
-	
+			pageUserManagement();
 			break;
 		}
 		case 4: {
@@ -79,6 +80,51 @@ public class InventoryManagement {
 		default:
 			throw new IllegalArgumentException("Unexpected value: " + choose);
 		}
+	}
+	public static void pageUserManagement() {
+		System.out.println("User Management Page");
+		System.out.println("1. Add new User");
+		System.out.println("2. Delete User");
+		System.out.println("3. Update User");
+		System.out.println("4. Search User");
+		System.out.println("5. Back");
+		System.out.print("Type a number: ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			adminsaveUser();
+			break;
+		}
+		case 2: {
+			
+			break;
+		}
+		case 3: {
+			
+			break;
+		}
+		case 4: {
+			
+			break;
+		}
+		case 5: {
+			adminpage();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void adminsaveUser() {
+		System.out.print("Username: ");
+		String username = sc.next();
+		System.out.print("Password: ");
+		String password = sc.next();
+		System.out.print("Role: ");
+		String role = sc.nextLine();
+		newuser = new User(username, password, role);
+		DBUser.save(newuser);
+		System.out.println("Now you have a account try login");
 	}
 	public static void pageProductManagement() {
 		System.out.println("Product Management Page");
