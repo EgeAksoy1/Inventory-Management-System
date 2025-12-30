@@ -1,5 +1,6 @@
 package InventoryManagement;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import DataBaseCon.DBProduct;
@@ -10,6 +11,7 @@ public class InventoryManagement {
 	private static User user;
 	private static User newuser;
 	private static PerishableProduct product;
+	private static Supplier supplier;
 	public static void login() {
 		
 		System.out.println("1. Sign Up");
@@ -38,7 +40,8 @@ public class InventoryManagement {
 			break;
 		}
 		default:
-			throw new IllegalArgumentException("Unexpected value: " + a);
+			System.out.println("\nInvalid input please try again");
+			login();
 		}
 	}
 	public static void pageselecter(String username,String password) {
@@ -60,13 +63,14 @@ public class InventoryManagement {
 		System.out.println("4. Logout");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			pageProductManagement();
 			break;
 		}
 		case 2: {
-			
+			pageSupplierManagement();
 			break;
 		}
 		case 3: {
@@ -75,6 +79,159 @@ public class InventoryManagement {
 		}
 		case 4: {
 			login();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void pageSupplierManagement() {
+		System.out.println("Supplier Management Page");
+		System.out.println("1. Add new Supplier");
+		System.out.println("2. Delete Supplier");
+		System.out.println("3. Update Supplier");
+		System.out.println("4. Back");
+		System.out.print("Type a number: ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			addSupplier();
+			break;
+		}
+		case 2: {
+			deleteSupplier();
+			break;
+		}
+		case 3: {
+			updateSupplier();
+			break;
+		}
+		case 4: {
+			adminpage();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void updateSupplier() {
+		for(String s:Supplier.getSupplierList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter an ID which supplier you want update: ");
+		int search = sc.nextInt();
+		Supplier.getSupplierDetailsById(search);
+		supplier = Supplier.getSupplierById(search);
+		System.out.print("Enter the number of the detail you want to update: ");
+		int choose = sc.nextInt();
+		sc.nextLine();
+		switch (choose) {
+		case 1: {
+			System.out.print("New Supplier name: ");
+			String newname = sc.nextLine();
+			Supplier.updateSupplier(search, newname, supplier.getAddress(), supplier.getLastorderDate());
+			pagebackSupplier();
+			break;
+		}
+		case 2: {
+			System.out.print("New Supplier address: ");
+			String newaddress = sc.nextLine();
+			Supplier.updateSupplier(search, supplier.getSuppliername(), newaddress, supplier.getLastorderDate());
+			pagebackSupplier();
+			break;
+		}
+		case 3: {
+			LocalDate date = null;
+
+			while (date == null) { 
+			    System.out.print("New Last Order Date (yyyy-MM-dd): ");
+			    String input = sc.nextLine();
+			    
+			    try {
+			        date = LocalDate.parse(input);
+			    } catch (Exception e) {
+			        System.out.println("Invalid input please try again");
+			    }
+			}
+			Supplier.updateSupplier(search, supplier.getSuppliername(), supplier.getAddress(), date);
+			pagebackSupplier();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void pagebackSupplier() {
+		System.out.println("1. Back      2.Quit");
+		System.out.print("Type a number (1-2): ");
+		int choose2 = sc.nextInt();
+		sc.nextLine();
+		if (choose2 == 1) {
+			updateSupplier();
+		}else if(choose2 == 2) {
+			adminpage();
+		}else {
+			System.out.println("Invalid input");
+			pagebackSupplier();
+		}
+	}
+	public static void deleteSupplier() {
+		for(String s:Supplier.getSupplierList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter an ID which supplier you want delete: ");
+		int searchID = sc.nextInt();
+		Supplier.delete(searchID);
+		System.out.println("New Supplier List");
+		for(String s:Supplier.getSupplierList()) {
+			System.out.println(s);
+		}
+		System.out.println("1. Quit     2. Back");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			pageSupplierManagement();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
+	}
+	public static void addSupplier() {
+		System.out.print("Supplier name: ");
+		String suppliername = sc.nextLine();
+		System.out.print("Supplier address: ");
+		String address = sc.nextLine();
+		sc.nextLine();
+		LocalDate date = null;
+
+		while (date == null) { 
+		    System.out.print("Enter Last Order Date (yyyy-MM-dd): ");
+		    String input = sc.nextLine();
+		    
+		    try {
+		        date = LocalDate.parse(input);
+		    } catch (Exception e) {
+		        System.out.println("Invalid input please try again");
+		    }
+		}
+		supplier = new Supplier(suppliername, address, date);
+		supplier.save();
+		System.out.println("1. Quit     2. Back");
+		System.out.print("Type a number (1-2): ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			pageselecter(user.getName(), user.getPassword());
+			break;
+		}
+		case 2: {
+			pageSupplierManagement();
 			break;
 		}
 		default:
@@ -116,13 +273,33 @@ public class InventoryManagement {
 		}
 	}
 	public static void adminsearchUser() {
-		
+		for (String s : DBUser.getUserList()) {
+			System.out.println(s);
+		}
+		System.out.print("Enter the ID of the user to search:");
+		int userid = sc.nextInt();
+		DBUser.getUserDetailsById(userid);
+		System.out.println("1. Back    2. Quit");
+		System.out.print("Type a number: ");
+		int choose = sc.nextInt();
+		switch (choose) {
+		case 1: {
+			adminsearchUser();
+			break;
+		}
+		case 2: {
+			adminpage();
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + choose);
+		}
 	}
 	public static void adminupdateUser() {
 		for (String s : DBUser.getUserList()) {
 			System.out.println(s);
 		}
-		System.out.print("Enter the ID of the user to update:");
+		System.out.print("Enter the ID of the user to update: ");
 		int userid = sc.nextInt();
 		DBUser.getUserDetailsById(userid);
 		newuser = DBUser.getUserById(userid);
@@ -172,7 +349,7 @@ public class InventoryManagement {
 			adminpage();
 		}else {
 			System.out.println("Invalid input");
-			pageBack();
+			pagebackUser();
 		}
 	}
 	public static void admindeleteUser() {
@@ -377,6 +554,7 @@ public class InventoryManagement {
 		System.out.println("5. Logout");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			addProduct();
@@ -411,6 +589,10 @@ public class InventoryManagement {
 		Double price = sc.nextDouble();
 		System.out.print("Stock level: ");
 		int stocklevel = sc.nextInt();
+		System.out.println("\n Supplier List");
+		for(String s:Supplier.getSupplierList()) {
+			System.out.println(s);
+		}
 		System.out.print("Supplier ID: ");
 		int supplierid = sc.nextInt();
 		System.out.print("Minimum Stock Level: ");
