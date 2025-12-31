@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Supplier {
+import DataBaseCon.DBHelper;
+
+public class Supplier implements Storable{
 
 	private int id;
 	private String suppliername;
@@ -43,16 +45,13 @@ public class Supplier {
 
 	    List<String> supplierList = new ArrayList<>();
 
-	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
 
 	    String selectSql = "SELECT id, suppliername FROM suppliers";
 
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	        try (Connection connection = DBHelper.getConnection();
 	             Statement statement = connection.createStatement();
 	             ResultSet resultSet = statement.executeQuery(selectSql)) {
 
@@ -74,16 +73,15 @@ public class Supplier {
 	    return supplierList;
 	}
 	
+	@Override
 	public void save() {
-        String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-        String dbuser = "root";
-        String password = "sql1234";
+        
 
         String insertSql = "INSERT INTO suppliers (suppliername, address, lastorderdate) VALUES (?, ?, ?)";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+            try (Connection connection = DBHelper.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
 
                 preparedStatement.setString(1, this.suppliername);
@@ -115,41 +113,30 @@ public class Supplier {
     }
 	public static void updateSupplier(int id, String name, String address, LocalDate lastOrderDate) {
 	    
-	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
+		String updateSql = "UPDATE suppliers SET suppliername = ?, address = ?, lastorderdate = ? WHERE id = ?";
 
-	    String updateSql = "UPDATE suppliers SET suppliername = ?, address = ?, lastorderdate = ? WHERE id = ?";
+	    try (Connection connection = DBHelper.getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
 
-	    try {
-	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        preparedStatement.setString(1, name);
+	        preparedStatement.setString(2, address);
 
-	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
-	             PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
-
-	            preparedStatement.setString(1, name);
-
-	            preparedStatement.setString(2, address);
-
-	            if (lastOrderDate != null) {
-	                preparedStatement.setDate(3, java.sql.Date.valueOf(lastOrderDate));
-	            } else {
-	                preparedStatement.setNull(3, java.sql.Types.DATE);
-	            }
-
-	            preparedStatement.setInt(4, id);
-
-	            int rowsAffected = preparedStatement.executeUpdate();
-
-	            if (rowsAffected > 0) {
-	                System.out.println("Supplier with ID " + id + " was updated successfully.");
-	            } else {
-	                System.out.println("Update failed. Supplier with ID " + id + " not found.");
-	            }
+	        if (lastOrderDate != null) {
+	            preparedStatement.setDate(3, java.sql.Date.valueOf(lastOrderDate));
+	        } else {
+	            preparedStatement.setNull(3, java.sql.Types.DATE);
 	        }
 
-	    } catch (ClassNotFoundException e) {
-	        System.err.println("Driver Error: " + e.getMessage());
+	        preparedStatement.setInt(4, id);
+
+	        int rowsAffected = preparedStatement.executeUpdate();
+
+	        if (rowsAffected > 0) {
+	            System.out.println("Supplier with ID " + id + " was updated successfully.");
+	        } else {
+	            System.out.println("Update failed. Supplier with ID " + id + " not found.");
+	        }
+
 	    } catch (SQLException e) {
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
@@ -158,16 +145,13 @@ public class Supplier {
 	    
 	    Supplier supplier = null; 
 
-	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
 
 	    String selectSql = "SELECT id, suppliername, address, lastorderdate FROM suppliers WHERE id = ?";
 
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	        try (Connection connection = DBHelper.getConnection();
 	             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
 
 	            preparedStatement.setInt(1, searchId);
@@ -197,16 +181,13 @@ public class Supplier {
 	    return supplier;
 	}
 	public static void getSupplierDetailsById(int searchId) {
-	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
 
 	    String selectSql = "SELECT id, suppliername, address, lastorderdate FROM suppliers WHERE id = ?";
 
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	        try (Connection connection = DBHelper.getConnection();
 	             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
 
 	            preparedStatement.setInt(1, searchId);
@@ -238,17 +219,15 @@ public class Supplier {
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
 	}
-	public static void delete(int id) {
-	    String url = "jdbc:mysql://localhost:3306/oop-project?useSSL=false&allowPublicKeyRetrieval=true";
-	    String dbuser = "root";
-	    String password = "sql1234";
+	public void delete(int id) {
+	    
 
 	    String deleteSql = "DELETE FROM suppliers WHERE id = ?";
 
 	    try {
 	        Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        try (Connection connection = DriverManager.getConnection(url, dbuser, password);
+	        try (Connection connection = DBHelper.getConnection();
 	             PreparedStatement preparedStatement = connection.prepareStatement(deleteSql)) {
 
 	            preparedStatement.setInt(1, id);

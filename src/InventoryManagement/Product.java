@@ -2,6 +2,7 @@ package InventoryManagement;
 
 public class Product {
 
+	private int id;
 	private String name;
 	private double price;
 	private int supplierId;
@@ -54,5 +55,17 @@ public class Product {
 
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void delete(int id) {
+
 	}
 }

@@ -3,8 +3,7 @@ package InventoryManagement;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import DataBaseCon.DBProduct;
-import DataBaseCon.DBUser;
+
 
 public class InventoryManagement {
 	private static Scanner sc = new Scanner(System.in);
@@ -18,6 +17,7 @@ public class InventoryManagement {
 		System.out.println("2. Login");
 		System.out.print("Type a number: ");
 		int a = sc.nextInt();
+		sc.nextLine();
 		switch (a) {
 		case 1: {
 			System.out.print("Username: ");
@@ -25,7 +25,7 @@ public class InventoryManagement {
 			System.out.print("Password: ");
 			String password = sc.next();
 			user = new User(username, password, "user");
-			DBUser.save(user);
+			user.save();
 			System.out.println("Now you have a account try login");
 			login();
 			break;
@@ -45,7 +45,7 @@ public class InventoryManagement {
 		}
 	}
 	public static void pageselecter(String username,String password) {
-		String selected = DBUser.selectUser(username, password);
+		String selected = User.selectUser(username, password);
 		if (selected.equals("admin")) {
 			user = new User(username, password, "admin");
 			adminpage();
@@ -93,6 +93,7 @@ public class InventoryManagement {
 		System.out.println("4. Back");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			addSupplier();
@@ -181,7 +182,8 @@ public class InventoryManagement {
 		}
 		System.out.print("Enter an ID which supplier you want delete: ");
 		int searchID = sc.nextInt();
-		Supplier.delete(searchID);
+		Supplier deleteSupplier = Supplier.getSupplierById(searchID);
+		deleteSupplier.delete(searchID);
 		System.out.println("New Supplier List");
 		for(String s:Supplier.getSupplierList()) {
 			System.out.println(s);
@@ -247,6 +249,7 @@ public class InventoryManagement {
 		System.out.println("5. Back");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			adminsaveUser();
@@ -273,12 +276,12 @@ public class InventoryManagement {
 		}
 	}
 	public static void adminsearchUser() {
-		for (String s : DBUser.getUserList()) {
+		for (String s : User.getUserList()) {
 			System.out.println(s);
 		}
 		System.out.print("Enter the ID of the user to search:");
 		int userid = sc.nextInt();
-		DBUser.getUserDetailsById(userid);
+		User.getUserDetailsById(userid);
 		System.out.println("1. Back    2. Quit");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
@@ -296,13 +299,13 @@ public class InventoryManagement {
 		}
 	}
 	public static void adminupdateUser() {
-		for (String s : DBUser.getUserList()) {
+		for (String s : User.getUserList()) {
 			System.out.println(s);
 		}
 		System.out.print("Enter the ID of the user to update: ");
 		int userid = sc.nextInt();
-		DBUser.getUserDetailsById(userid);
-		newuser = DBUser.getUserById(userid);
+		User.getUserDetailsById(userid);
+		newuser = User.getUserById(userid);
 		System.out.print("Enter the number of the detail you want to update: ");
 		int choose = sc.nextInt();
 		sc.nextLine();
@@ -310,27 +313,27 @@ public class InventoryManagement {
 		case 1: {
 			System.out.print("New username: ");
 			String newusername = sc.nextLine();
-			DBUser.adminUpdate(userid, newusername, newuser.getPassword(), newuser.getRole());
+			User.adminUpdate(userid, newusername, newuser.getPassword(), newuser.getRole());
 			System.out.println("New Details of User");
-			DBUser.getUserDetailsById(userid);
+			User.getUserDetailsById(userid);
 			pagebackUser();
 			break;
 		}
 		case 2: {
 			System.out.print("New password: ");
 			String newpassword = sc.nextLine();
-			DBUser.adminUpdate(userid, newuser.getName(), newpassword, newuser.getRole());
+			User.adminUpdate(userid, newuser.getName(), newpassword, newuser.getRole());
 			System.out.println("New Details of User");
-			DBUser.getUserDetailsById(userid);
+			User.getUserDetailsById(userid);
 			pagebackUser();
 			break;
 		}
 		case 3: {
 			System.out.print("New role: ");
 			String newrole = sc.nextLine();
-			DBUser.adminUpdate(userid, newuser.getName(), newuser.getPassword(), newrole);
+			User.adminUpdate(userid, newuser.getName(), newuser.getPassword(), newrole);
 			System.out.println("New Details of User");
-			DBUser.getUserDetailsById(userid);
+			User.getUserDetailsById(userid);
 			pagebackUser();
 			break;
 		}
@@ -353,12 +356,12 @@ public class InventoryManagement {
 		}
 	}
 	public static void admindeleteUser() {
-		for (String s : DBUser.getUserList()) {
+		for (String s : User.getUserList()) {
 			System.out.println(s);
 		}
 		System.out.print("Enter the ID of the user to delete:");
 		int userid = sc.nextInt();
-		DBUser.adminDelete(userid);
+		User.adminDelete(userid);
 		System.out.println("1. Back     2. Quit");
 		System.out.print("Type a number (1-2): ");
 		int choose = sc.nextInt();
@@ -383,7 +386,7 @@ public class InventoryManagement {
 		System.out.print("Role: ");
 		String role = sc.nextLine();
 		newuser = new User(username, password, role);
-		DBUser.save(newuser);
+		newuser.save();
 		System.out.print("Type a number (1-2): ");
 		int choose = sc.nextInt();
 		switch (choose) {
@@ -409,6 +412,7 @@ public class InventoryManagement {
 		System.out.println("5. Back");
 		System.out.print("Type a number: ");
 		int choose = sc.nextInt();
+		sc.nextLine();
 		switch (choose) {
 		case 1: {
 			addProduct();
@@ -436,14 +440,15 @@ public class InventoryManagement {
 		
 	}
 	public static void deleteProduct() {
-		for (String s : DBProduct.searchProductsList()) {
+		for (String s : PerishableProduct.searchProductsList()) {
 			System.out.println(s);
 		}
 		System.out.print("Enter an ID which product you want delete: ");
 		int searchID = sc.nextInt();
-		DBProduct.deleteProduct(searchID);
+		PerishableProduct deletePerishableProduct = PerishableProduct.getPerishableProductById(searchID);
+		deletePerishableProduct.delete(searchID);
 		System.out.println("Final Product List");
-		for (String s : DBProduct.searchProductsList()) {
+		for (String s : PerishableProduct.searchProductsList()) {
 			System.out.println(s);
 		}
 		System.out.print("1. Back     2. Quit");
@@ -475,13 +480,13 @@ public class InventoryManagement {
 		}
 	}
 	public static void updateProduct() {
-		for (String s : DBProduct.searchProductsList()) {
+		for (String s : PerishableProduct.searchProductsList()) {
 			System.out.println(s);
 		}
 		System.out.println("Enter an ID which product you want update: ");
 		int searchID = sc.nextInt();
-		DBProduct.selectProductsID(searchID);
-	    product = DBProduct.getPerishableProductById(searchID);
+		PerishableProduct.selectProductsID(searchID);
+	    product = PerishableProduct.getPerishableProductById(searchID);
 		System.out.print("Enter the number of the detail you want to update: ");
 		int choose = sc.nextInt();
 		sc.nextLine();
@@ -489,54 +494,54 @@ public class InventoryManagement {
 		case 1: {
 			System.out.print("Enter new name: ");
 			String newname = sc.nextLine();
-			DBProduct.updateProduct(searchID, newname, product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
+			PerishableProduct.updateProduct(searchID, newname, product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
 		case 2: {
 			System.out.print("Enter new price: ");
 			Double newprice = sc.nextDouble();
-			DBProduct.updateProduct(searchID, product.getName(), newprice, product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
+			PerishableProduct.updateProduct(searchID, product.getName(), newprice, product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
 		case 3: {
 			System.out.print("Enter new supplier ID: ");
 			int newsupplierid = sc.nextInt();
-			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), newsupplierid, product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
+			PerishableProduct.updateProduct(searchID, product.getName(), product.getPrice(), newsupplierid, product.getStock(), product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
 		case 4: {
 			System.out.print("Enter new stock level: ");
 			int newstocklevel = sc.nextInt();
-			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), newstocklevel, product.getMinimumstocklevel(), product.getMaxstoragedays());
+			PerishableProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), newstocklevel, product.getMinimumstocklevel(), product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
 		case 5: {
 			System.out.print("Enter new minimum stock level: ");
 			int newminimumstocklevel = sc.nextInt();
-			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), newminimumstocklevel, product.getMaxstoragedays());
+			PerishableProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), newminimumstocklevel, product.getMaxstoragedays());
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
 		case 6: {
 			System.out.print("Enter new max storage days: ");
 			String newmaxstoragedays = sc.nextLine();
-			DBProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), newmaxstoragedays);
+			PerishableProduct.updateProduct(searchID, product.getName(), product.getPrice(), product.getSupplierId(), product.getStock(), product.getMinimumstocklevel(), newmaxstoragedays);
 			System.out.println("New Details of Updated Product");
-			DBProduct.selectProductsID(searchID);
+			PerishableProduct.selectProductsID(searchID);
 			pageBack();
 			break;
 		}
@@ -600,7 +605,7 @@ public class InventoryManagement {
 		System.out.print("Max Storage Days (It can be space): ");
 		String maxstoragedays = sc.next();
 		PerishableProduct added = new PerishableProduct(name, price, stocklevel, supplierid, minimumstocklevel, maxstoragedays);
-		DBProduct.save(added);
+		added.save();
 		System.out.println("1. Back     2. Add another product");
 		System.out.print("Type a number (1-2): ");
 		int choose = sc.nextInt();
@@ -619,7 +624,7 @@ public class InventoryManagement {
 	}
 	public static void reduceProduct() {
 		
-		for (String s : DBProduct.getProductsList()) {
+		for (String s : PerishableProduct.getProductsList()) {
 			System.out.println(s);
 		}
 		
@@ -627,9 +632,9 @@ public class InventoryManagement {
 		int id = sc.nextInt();
 		System.out.print("Enter an amount that you want reduce: ");
 		int amount = sc.nextInt();
-		DBProduct.reduceProduct(id,amount);
+		PerishableProduct.reduceProduct(id,amount);
 		System.out.println("New Product List");
-		for (String s : DBProduct.getProductsList()) {
+		for (String s : PerishableProduct.getProductsList()) {
 			System.out.println(s);
 		}
 		System.out.println("1. Back     2. Reduce another product");
@@ -649,12 +654,12 @@ public class InventoryManagement {
 		}
 	}
 	public static void searchProduct() {
-		for (String s : DBProduct.searchProductsList()) {
+		for (String s : PerishableProduct.searchProductsList()) {
 			System.out.println(s);
 		}
 		System.out.print("Enter an ID which product you want search: ");
 		int searchID = sc.nextInt();
-		DBProduct.selectProductsID(searchID);
+		PerishableProduct.selectProductsID(searchID);
 		System.out.println("1. Back     2. Search another product");
 		System.out.print("Type a number (1-2): ");
 		int choose = sc.nextInt();
@@ -684,7 +689,7 @@ public class InventoryManagement {
 		case 1: {
 			System.out.print("Enter your new password: ");
 			String newpass = sc.nextLine();
-			DBUser.update(user, user.getName(), newpass);
+			user.update(user.getName(), newpass);
 			user = new User(user.getName(),newpass,user.getRole());
 			System.out.println("Username: "+user.getName()+" Password: "+user.getPassword());
 			accountmanagement();
@@ -692,7 +697,7 @@ public class InventoryManagement {
 		}
 		case 2: {
 			System.out.println("Your account has been deleted");
-			DBUser.delete(user);
+			user.delete();
 			login();
 			break;
 		}
