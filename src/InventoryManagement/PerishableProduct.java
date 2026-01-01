@@ -206,6 +206,63 @@ public class PerishableProduct extends Product implements Storable{
 	        System.err.println("SQL Error: " + e.getMessage());
 	    }
 	}
+	public static boolean controllerminstock(int searchId) {
+
+	    String selectSql = "SELECT stocklevel, minimumstocklevel FROM products WHERE id = ?";
+
+
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver"); 
+
+	        try (Connection connection = DBHelper.getConnection();
+	             PreparedStatement preparedStatement = connection.prepareStatement(selectSql)) {
+	             
+	            preparedStatement.setInt(1, searchId);
+
+	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                if (resultSet.next()) {;
+	                    int stockLevel = resultSet.getInt("stocklevel");
+	                    int minStockLevel = resultSet.getInt("minimumstocklevel");
+
+	                    if(minStockLevel>=stockLevel) {
+	                    	return true;
+	                    }
+	                  else {
+	                    return false;
+	                }
+	            }
+	            }
+	        }
+	    } catch (ClassNotFoundException e) {
+	        System.err.println("Driver Error: " + e.getMessage());
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+		return false;
+	}
+	public static void reorderProduct(int id) {
+
+		if(controllerminstock(id)) {
+		    String updateSql = "UPDATE products SET stocklevel = stocklevel + 20 WHERE id = ?";
+	
+		    try (Connection connection = DBHelper.getConnection();
+		         PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
+	
+		        preparedStatement.setInt(1, id);
+		        
+		        int rowsAffected = preparedStatement.executeUpdate();
+		        
+		        if (rowsAffected > 0) {
+		            System.out.println("Product stock updated (added +20) for ID: " + id);
+		        } else {
+		            System.out.println("Update failed. Product with ID " + id + " not found.");
+		        }
+		        
+		    } catch (SQLException e) {
+		        System.err.println("SQL Error: " + e.getMessage());
+		    }
+		}
+	}
 	public static void updateProduct(int id, String name, double price, int supplierId, int stockLevel, int minStockLevel, String maxStorageDays) {
 
 	    String updateSql = "UPDATE products SET name=?, price=?, supplierId=?, stocklevel=?, minimumstocklevel=?, maxstoragedays=? WHERE id=?";

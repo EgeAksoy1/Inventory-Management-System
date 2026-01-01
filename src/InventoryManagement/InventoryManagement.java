@@ -12,12 +12,19 @@ public class InventoryManagement {
 	private static PerishableProduct product;
 	private static Supplier supplier;
 	public static void login() {
-		
-		System.out.println("1. Sign Up");
-		System.out.println("2. Login");
-		System.out.print("Type a number: ");
-		int a = sc.nextInt();
-		sc.nextLine();
+		int a = 0;
+		try {
+			System.out.println("1. Sign Up");
+			System.out.println("2. Login");
+			System.out.print("Type a number: ");
+			a = sc.nextInt();
+			sc.nextLine();
+		}catch (Exception e) {
+			System.out.println("Invalid input please try again");
+			sc.nextLine();
+			login();
+			return;
+		}
 		switch (a) {
 		case 1: {
 			System.out.print("Username: ");
@@ -633,10 +640,12 @@ public class InventoryManagement {
 		System.out.print("Enter an amount that you want reduce: ");
 		int amount = sc.nextInt();
 		PerishableProduct.reduceProduct(id,amount);
+		PerishableProduct.reorderProduct(id);
 		System.out.println("New Product List");
 		for (String s : PerishableProduct.getProductsList()) {
 			System.out.println(s);
 		}
+
 		System.out.println("1. Back     2. Reduce another product");
 		System.out.print("Type a number (1-2): ");
 		int choose = sc.nextInt();
