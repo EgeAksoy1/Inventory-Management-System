@@ -1,6 +1,14 @@
 package InventoryManagement;
 
-public class Product {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import DataBaseCon.DBHelper;
+
+public class Product implements Storable{
 
 	private int id;
 	private String name;
@@ -16,7 +24,36 @@ public class Product {
 		setSupplierId(supplierId);
 		setMinimumstocklevel(minimumstocklevel);
 	}
+	public void save() {
+	    String insertSql = "INSERT INTO products (name, price, stocklevel, supplierId, minimumstocklevel) VALUES (?, ?, ?, ?, ?)";
+
+	    try (Connection connection = DBHelper.getConnection();
+	         PreparedStatement preparedStatement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS)) {
+
+	        preparedStatement.setString(1, this.getName()); 
+	        preparedStatement.setDouble(2, this.getPrice());
+	        preparedStatement.setInt(3, this.getStock()); 
+	        preparedStatement.setInt(4, this.getSupplierId());
+	        preparedStatement.setInt(5, this.getMinimumstocklevel());
+
+	        int affectedRows = preparedStatement.executeUpdate();
+
+	        if (affectedRows > 0) {
+	            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+	                if (generatedKeys.next()) {
 	
+	                    this.setId(generatedKeys.getInt(1)); 
+	                    System.out.println("Product saved successfully. Assigned ID: " + this.getId());
+	                }
+	            }
+	        } else {
+	            System.out.println("Failed to save product.");
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("SQL Error: " + e.getMessage());
+	    }
+	}
 	public String getName() {
 		return name;
 	}
