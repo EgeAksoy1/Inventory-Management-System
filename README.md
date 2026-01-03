@@ -51,7 +51,7 @@ To run this project locally:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/Inventory-Management-System.git](https://github.com/EgeAksoy1/Inventory-Management-System.git)
+    git clone [https://github.com/EgeAksoy1/Inventory-Management-System.git](https://github.com/EgeAksoy1/Inventory-Management-System.git)
     ```
 2.  **Database Setup:**
     * Create a database named `inventory_db` in MySQL.
