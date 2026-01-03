@@ -340,7 +340,6 @@ public class InventoryManagement {
 			suppliername = sc.nextLine();
 			System.out.print("Supplier address: ");
 			address = sc.nextLine();
-			sc.nextLine();
 		}catch (Exception e) {
 			System.out.println("Invalid input please try again");
 			sc.nextLine();
