@@ -342,7 +342,6 @@ public class InventoryManagement {
 			address = sc.nextLine();
 		}catch (Exception e) {
 			System.out.println("Invalid input please try again");
-			sc.nextLine();
 			addSupplier();
 			return;
 		}
