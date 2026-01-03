@@ -13,71 +13,78 @@ public class InventoryManagement {
 	private Supplier supplier;
 	public void login() {
 		int a = 0;
-		try {
-			System.out.println("1. Sign Up");
-			System.out.println("2. Login");
-			System.out.print("Type a number: ");
-			a = sc.nextInt();
-			sc.nextLine();
-		}catch (Exception e) {
-			System.out.println("Invalid input please try again");
-			sc.nextLine();
-			login();
-			return;
-		}
+		boolean b = true;
+		do {
+			try {
+				System.out.println("1. Sign Up");
+				System.out.println("2. Login");
+				System.out.print("Type a number: ");
+				a = sc.nextInt();
+				sc.nextLine();
+				b = false;
+			}catch (Exception e) {
+				System.out.println("Invalid input please try again");
+				sc.nextLine();
+			}
+		}while(b);
 		switch (a) {
 		case 1: {
-			try {
-				System.out.print("Username: ");
-				String username = sc.nextLine();
-				if (username.isEmpty()) {
+			b = true;
+			do {
+				try {
+					System.out.print("Username: ");
+					String username = sc.nextLine();
+					if (username.isEmpty()) {
+						System.out.println("Invalid input please try again");
+						continue;
+					}
+					System.out.print("Password: ");
+					String password = sc.nextLine();
+					if (password.isEmpty()) {
+						System.out.println("Invalid input please try again");
+						continue;
+					}
+					user = new User(username, password, "user");
+					user.save();
+					b = false;
+					System.out.println("Now you have a account");
+				}catch (Exception e) {
 					System.out.println("Invalid input please try again");
-					login();
-					return;
+					sc.nextLine();
 				}
-				System.out.print("Password: ");
-				String password = sc.nextLine();
-				if (password.isEmpty()) {
-					System.out.println("Invalid input please try again");
-					login();
-					return;
-				}
-				user = new User(username, password, "user");
-				user.save();
-				System.out.println("Now you have a account try login");
-				login();
-				break;
-			}catch (Exception e) {
-				System.out.println("Invalid input please try again");
-				sc.nextLine();
-				login();
-				return;
-			}
+			}while(b);
+			pageselecter(user.getName(),user.getPassword());
+			break;
 		}
 		case 2: {
-			try {
-				System.out.print("Username: ");
-				String username = sc.nextLine();
-				if (username.isEmpty()) {
+			b = true;
+			String username = null, password = null;
+			do {
+				try {
+					System.out.print("Username: ");
+					username = sc.nextLine();
+					if (username.isEmpty()) {
+						System.out.println("Invalid input please try again");
+						continue;
+					}
+					System.out.print("Password: ");
+					password = sc.nextLine();
+					if (password.isEmpty()) {
+						System.out.println("Invalid input please try again");
+						continue;
+					}
+					String selected = User.selectUser(username, password);
+					if (selected == null) {
+						System.out.println("Username or Password is wrong please try again");
+						continue;
+					}
+					b = false;
+				}catch (Exception e) {
 					System.out.println("Invalid input please try again");
-					login();
-					return;
 				}
-				System.out.print("Password: ");
-				String password = sc.nextLine();
-				if (password.isEmpty()) {
-					System.out.println("Invalid input please try again");;
-					login();
-					return;
-				}
-				pageselecter(username, password);
-				break;
-			}catch (Exception e) {
-				System.out.println("Invalid input please try again");
-				sc.nextLine();
-				login();
-				return;
-			}
+			}while(b);
+			pageselecter(username, password);
+			break;
 		}
 		default:
 			System.out.println("\nInvalid input please try again");
@@ -97,21 +104,22 @@ public class InventoryManagement {
 	public void adminpage() {
 		
 		int choose = 0;
-		try {
-			System.out.println("======ADMİN PAGE======");
-			System.out.println("1. Product Management");
-			System.out.println("2. Supplier Management");
-			System.out.println("3. User Management");
-			System.out.println("4. Logout");
-			System.out.print("Type a number: ");
-			choose = sc.nextInt();
-			sc.nextLine();
-		}catch (Exception e) {
-			System.out.println("Invalid input please try again");
-			sc.nextLine();
-			adminpage();
-			return;
-		}
+		boolean b = true;
+		do {
+			try {
+				System.out.println("======ADMİN PAGE======");
+				System.out.println("1. Product Management");
+				System.out.println("2. Supplier Management");
+				System.out.println("3. User Management");
+				System.out.println("4. Logout");
+				System.out.print("Type a number: ");
+				choose = sc.nextInt();
+				sc.nextLine();
+				b = false;
+			}catch (Exception e) {
+				System.out.println("Invalid input please try again");
+			}
+		}while(b);
 		switch (choose) {
 		case 1: {
 			pageProductManagement();
@@ -131,27 +139,27 @@ public class InventoryManagement {
 		}
 		default:
 			System.out.println("Invalid input please try again");
-			sc.nextLine();
 			adminpage();
 		}
 	}
 	public void pageSupplierManagement() {
 		int choose = 0;
-		try {
-			System.out.println("Supplier Management Page");
-			System.out.println("1. Add new Supplier");
-			System.out.println("2. Delete Supplier");
-			System.out.println("3. Update Supplier");
-			System.out.println("4. Back");
-			System.out.print("Type a number: ");
-			choose = sc.nextInt();
-			sc.nextLine();
-		}catch (Exception e) {
-			System.out.println("Invalid input please try again");
-			sc.nextLine();
-			pageSupplierManagement();
-			return;
-		}
+		boolean b = true;
+		do {
+			try {
+				System.out.println("Supplier Management Page");
+				System.out.println("1. Add new Supplier");
+				System.out.println("2. Delete Supplier");
+				System.out.println("3. Update Supplier");
+				System.out.println("4. Back");
+				System.out.print("Type a number: ");
+				choose = sc.nextInt();
+				sc.nextLine();
+				b = false;
+			}catch (Exception e) {
+				System.out.println("Invalid input please try again");
+			}
+		}while(b);
 		switch (choose) {
 		case 1: {
 			addSupplier();
@@ -171,7 +179,6 @@ public class InventoryManagement {
 		}
 		default:
 			System.out.println("Invalid input please try again");
-			sc.nextLine();
 			pageSupplierManagement();
 		}
 	}
@@ -885,22 +892,23 @@ public class InventoryManagement {
 	}
 	public void userpage() {
 		int choose = 0;
-		try {
-			System.out.println("======USER PAGE======");
-			System.out.println("1. Add new product");
-			System.out.println("2. Reduce Product");
-			System.out.println("3. Search Product");
-			System.out.println("4. Account Management");
-			System.out.println("5. Logout");
-			System.out.print("Type a number: ");
-			choose = sc.nextInt();
-			sc.nextLine();
-		}catch (Exception e) {
-			System.out.println("Invalid input please try again");
-			sc.nextLine();
-			userpage();
-			return;
-		}
+		boolean b = true;
+		do {
+			try {
+				System.out.println("======USER PAGE======");
+				System.out.println("1. Add new product");
+				System.out.println("2. Reduce Product");
+				System.out.println("3. Search Product");
+				System.out.println("4. Account Management");
+				System.out.println("5. Logout");
+				System.out.print("Type a number: ");
+				choose = sc.nextInt();
+				sc.nextLine();
+				b = false;
+			}catch (Exception e) {
+				System.out.println("Invalid input please try again");
+			}
+		}while(b);
 		switch (choose) {
 		case 1: {
 			addProduct();
@@ -924,9 +932,7 @@ public class InventoryManagement {
 		}
 		default:
 			System.out.println("Invalid input please try again");
-			sc.nextLine();
 			userpage();
-			return;
 		}
 		
 	}

@@ -289,10 +289,10 @@ public class User implements Storable{
 	        }
 
 	    } catch (ClassNotFoundException e) {
-	        System.out.println("MySQL Driver bulunamadı: " + e.getMessage());
+	        System.out.println("Driver Error: " + e.getMessage());
 	  
 	    } catch (SQLException e) {
-	        System.out.println("Bağlantı/Sorgu hatası: " + e.getMessage());
+	        System.out.println("SQL Error: " + e.getMessage());
 	
 	    }
 	    
